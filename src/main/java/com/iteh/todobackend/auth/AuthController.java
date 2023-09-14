@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/auth")
@@ -31,7 +32,9 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request, HttpServletRequest servletRequest) {
+
+
         try {
             AuthenticationResponse response = authService.authenticate(request);
             return ResponseEntity.ok(response);
@@ -40,6 +43,7 @@ public class AuthController {
                     .body("Invalid username or password");
         }
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
@@ -83,5 +87,7 @@ public class AuthController {
 
         return userResponse;
     }
+
+
 
 }

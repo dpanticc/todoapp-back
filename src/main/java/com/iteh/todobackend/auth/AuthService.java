@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,9 +42,11 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+        addLoggedInUser(user.getUsername(), jwtToken);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -78,7 +82,12 @@ public class AuthService {
     }
 
     public void logout(String username) {
-        loggedInUsers.remove(username);
+        if (isUserLoggedIn(username)) {
+            loggedInUsers.remove(username);
+        } else {
+            // Handle the case where the user is not logged in
+            throw new IllegalStateException("User is not logged in");
+        }
     }
 
     public boolean isUserLoggedIn(String username) {
@@ -138,4 +147,5 @@ public class AuthService {
                 .build();
         tokenRepository.save(token);
     }
+
 }
