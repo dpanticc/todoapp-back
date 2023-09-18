@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
 
+
+@Api(tags = "User Management")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -19,6 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ApiOperation(value = "Register a new user")
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDto registrationRequest) {
         // Validate the userDto (e.g., check if the required fields are provided)

@@ -2,6 +2,7 @@ package com.iteh.todobackend.config;
 
 import com.iteh.todobackend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
+@ComponentScan("com.iteh.todobackend.config")
 @Configuration
 public class ApplicationConfig {
 

@@ -6,12 +6,15 @@ import com.iteh.todobackend.entity.User;
 import com.iteh.todobackend.service.TaskService;
 import com.iteh.todobackend.service.UserService;
 import com.iteh.todobackend.config.JwtService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.Api;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Api(tags = "Task Management")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TaskController {
 
@@ -26,7 +30,7 @@ public class TaskController {
     private final UserService userService;
     private final JwtService jwtService;
 
-
+    @ApiOperation(value = "Get all tasks")
     @GetMapping
     public List<TaskDTO> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
@@ -35,6 +39,7 @@ public class TaskController {
                 .collect(Collectors.toList());
     }
 
+    @ApiOperation(value = "Add a new task")
     @PostMapping
     public ResponseEntity<?> addTask(@RequestBody TaskDTO taskDTO) {
         // Get the currently authenticated user
@@ -52,6 +57,7 @@ public class TaskController {
         return new ResponseEntity<>(convertToDto(savedTask), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Get a task by ID")
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
         Task task = taskService.getTaskById(id);
@@ -62,6 +68,7 @@ public class TaskController {
         }
     }
 
+    @ApiOperation(value = "Update a task by ID")
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO updatedTaskDTO) {
         Task task = taskService.getTaskById(id);
@@ -91,6 +98,7 @@ public class TaskController {
         }
     }
 
+    @ApiOperation(value = "Delete a task by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         Task task = taskService.getTaskById(id);
@@ -115,6 +123,7 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @ApiOperation(value = "Get tasks for the current user")
     @GetMapping("/user/tasks")
     public ResponseEntity<List<TaskDTO>> getTasksForCurrentUser() {
         // Get the currently authenticated user

@@ -41,6 +41,7 @@ public class AuthService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role("user")
                 .build();
 
         var savedUser = repository.save(user);

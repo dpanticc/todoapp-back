@@ -33,9 +33,19 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public Long getId() {
         return id;

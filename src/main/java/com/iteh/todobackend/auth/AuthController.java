@@ -1,6 +1,8 @@
 package com.iteh.todobackend.auth;
+import io.swagger.annotations.Api;
 import com.iteh.todobackend.entity.User;
 import com.iteh.todobackend.repository.UserRepository;
+import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +17,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/auth")
+@Api(tags = "Authentication")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
     private final UserRepository userRepository;
 
+    @ApiOperation(value = "Registracija korisnika", response = AuthenticationResponse.class)
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try{
@@ -31,6 +35,7 @@ public class AuthController {
         }
     }
 
+    @ApiOperation(value = "Autentifikacija korisnika", response = AuthenticationResponse.class)
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthRequest request, HttpServletRequest servletRequest) {
 
@@ -44,7 +49,7 @@ public class AuthController {
         }
     }
 
-
+    @ApiOperation(value = "Odjava korisnika")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
         String username = request.getUsername();
@@ -56,6 +61,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not logged in.");
         }
     }
+    @ApiOperation(value = "Obnovi JWT token")
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
@@ -63,7 +69,7 @@ public class AuthController {
     ) throws IOException {
         authService.refreshToken(request, response);
     }
-
+    @ApiOperation(value = "Vrati detalje korisnika", response = UserResponse.class)
     @GetMapping("/getUser")
     public ResponseEntity<UserResponse> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
